@@ -1,23 +1,36 @@
 <script setup lang="ts">
 import type { Event } from '@/types'
 import { ref } from 'vue'
-const event = ref<Event>({
-    id: 0,
+import EventService from '@/services/EventService'
+import { useRouter } from 'vue-router'
+
+const event = ref<any>({
     category: '',
     title: '',
     description: '',
     location: '',
     date: '',
     time: '',
-    petsAllowed: false,
+    petAllowed: false,
     organizer: ''
 })
+
+const router = useRouter()
+function saveEvent() {
+    EventService.saveEvent(event.value)
+        .then((response) => {
+            router.push({ name: 'event-detail-view', params: { id: response.data.id }})
+        })
+        .catch(() => {
+            router.push({ name: 'network-error-view' })
+        })
+}
 </script>
 
 <template>
     <div>
         <h1>Create an event</h1>
-        <form>
+        <form @submit.prevent="saveEvent">
             <label>Category</label>
             <input v-model="event.category" type="text" placeholder="Category" class="field" />
             <h3>Name & describe your event</h3>
