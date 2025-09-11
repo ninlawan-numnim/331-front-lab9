@@ -16,6 +16,8 @@ import OrganizerService from '@/services/OrganizerService'
 import { useEventStore } from '@/stores/event'
 import { useOrganizerStore } from '@/stores/organizer'
 import AddEventView from '@/views/event/EventFormView.vue'
+import OrganizationFormView from '@/views/organizer/OrganizationFormView.vue'
+
 
 const router = createRouter({
   history: createWebHistory('/'),
@@ -133,6 +135,11 @@ const router = createRouter({
       path: '/add-event',
       name: 'add-event',
       component: AddEventView
+    },
+    {
+      path: '/add-organization',
+      name: 'add-organization',
+      component: OrganizationFormView
     },
   ],
   scrollBehavior(to, from, savedPosition) {
