@@ -13,7 +13,10 @@ const event = ref<any>({
     date: '',
     time: '',
     petAllowed: false,
-    organizer: ''
+    organizer: {
+        id: 0,
+        name: ''
+    }
 })
 
 const router = useRouter()
