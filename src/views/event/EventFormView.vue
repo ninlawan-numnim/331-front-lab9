@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import EventService from '@/services/EventService'
 import BaseInput from '@/components/BaseInput.vue'
 import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
+import { Organizer } from '@/types'
+import OrganizerService from '@/services/OrganizerService'
 
 // Event object with all fields from both scripts
 const event = ref<any>({
@@ -32,8 +34,18 @@ const saveEvent = async () => {
     router.push({ name: 'network-error-view' })
   }
 }
-</script>
 
+const organizers = ref<Organizer[]>([])
+onMounted(() => {
+  OrganizerService.getOrganizers()
+    .then((response) => {
+      organizers.value = response.data
+    })
+    .catch(() => {
+      router.push({ name: 'network-error-view' })
+    })
+})
+</script>
 <template>
   <div class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md">
     <h1 class="text-2xl font-semibold mb-4">Create an Event</h1>
@@ -65,11 +77,28 @@ const saveEvent = async () => {
         Pets Allowed
       </label>-->
 
+       <h3 class="mt-4 mb-2 text-lg font-medium">Who is your organizer?</h3>
+      <label class="block mb-1 text-sm font-medium text-gray-700">Select an Organizer</label>
+      <select
+        v-model="event.organizer.id"
+        class="mb-6 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option
+          v-for="option in organizers"
+          :value="option.id"
+          :key="option.id"
+          :selected="option.id === event.organizer.id"
+        >
+          {{ option.name }}
+        </option>
+      </select>
+
+      <!-- Submit Button -->
       <button
         type="submit"
         class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
       >
-        Save Event
+        Submit
       </button>
     </form>
 

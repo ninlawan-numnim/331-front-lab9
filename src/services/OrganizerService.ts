@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: false,
   headers: {
     Accept: 'application/json',
@@ -10,14 +10,7 @@ const apiClient = axios.create({
 })
 
 export default {
-  getOrganizers(perPage: number, page: number) {
-    return apiClient.get('/organizations?_limit=' + perPage + '&_page=' + page)  // Changed from /organizers
-  },
-  getOrganizer(id: number) {
-    return apiClient.get('/organizations/' + id)  // Changed from /organizers
-  },
-  // Add POST method for creating organizations
-  createOrganizer(organization: any) {
-    return apiClient.post('/organizations', organization)
+  getOrganizers() {
+    return apiClient.get('/organizers') 
   }
 }
