@@ -1,60 +1,80 @@
 <script setup lang="ts">
-import type { Event } from '@/types'
 import { ref } from 'vue'
 import EventService from '@/services/EventService'
+import BaseInput from '@/components/BaseInput.vue'
 import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
 
+// Event object with all fields from both scripts
 const event = ref<any>({
-    category: '',
-    title: '',
-    description: '',
-    location: '',
-    date: '',
-    time: '',
-    petAllowed: false,
-    organizer: {
-        id: 0,
-        name: ''
-    }
+  id: 0,
+  category: '',
+  title: '',
+  description: '',
+  location: '',
+  date: '',
+  time: '',
+  petAllowed: false,
+  organizer: { id: 0, name: '' }
 })
 
 const router = useRouter()
 const store = useMessageStore()
-function saveEvent() {
-    EventService.saveEvent(event.value)
-        .then((response) => {
-            router.push({ name: 'event-detail-view', params: { id: response.data.id }})
-            store.updateMessage('You are successfully add a new event for ' + response.data.title)
-                setTimeout(() => {
-                    store.resetMessage()
-                }, 3000)
-        })
-        .catch(() => {
-            router.push({ name: 'network-error-view' })
-        })
+
+const saveEvent = async () => {
+  try {
+    const response = await EventService.saveEvent(event.value)
+    router.push({ name: 'event-detail-view', params: { id: response.data.id } })
+    store.updateMessage('You successfully added a new event: ' + response.data.title)
+    setTimeout(() => store.resetMessage(), 3000)
+  } catch (error) {
+    console.error(error)
+    router.push({ name: 'network-error-view' })
+  }
 }
 </script>
 
 <template>
-    <div>
-        <h1>Create an event</h1>
-        <form @submit.prevent="saveEvent">
-            <label>Category</label>
-            <input v-model="event.category" type="text" placeholder="Category" class="field" />
-            <h3>Name & describe your event</h3>
-            <label>Title</label>
-            <input v-model="event.title" type="text" placeholder="Title" class="field" />
-            <label>Description</label>
-            <input v-model="event.description" type="text" placeholder="Description" class="field" />
-            <h3>Where is your event?</h3>
-            <label>Location</label>
-            <input v-model="event.location" type="text" placeholder="Location" class="field" />
-            <button class="button" type="submit">Submit</button>
-        </form>
+  <div class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md">
+    <h1 class="text-2xl font-semibold mb-4">Create an Event</h1>
 
-        <pre>{{ event }}</pre>
-    </div>
+    <form @submit.prevent="saveEvent">
+      <!-- Category -->
+      <BaseInput v-model="event.category" type="text" label="Category" />
+
+      <h3 class="mt-4 mb-2 text-lg font-medium">Name & describe your event</h3>
+
+      <!-- Title -->
+      <BaseInput v-model="event.title" type="text" label="Title" />
+
+      <!-- Description -->
+      <BaseInput v-model="event.description" type="text" label="Description" />
+
+      <h3 class="mt-4 mb-2 text-lg font-medium">Where is your event?</h3>
+
+      <!-- Location -->
+      <BaseInput v-model="event.location" type="text" label="Location" />
+
+      <!-- Optional: Date and Time
+      <BaseInput v-model="event.date" type="date" label="Date" />
+      <BaseInput v-model="event.time" type="time" label="Time" />
+ -->
+      <!-- Optional: Pet Allowed 
+      <label class="inline-flex items-center mt-2">
+        <input type="checkbox" v-model="event.petAllowed" class="mr-2" />
+        Pets Allowed
+      </label>-->
+
+      <button
+        type="submit"
+        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+      >
+        Save Event
+      </button>
+    </form>
+
+    <pre class="mt-4">{{ event }}</pre>
+  </div>
 </template>
 
 <style>
