@@ -7,7 +7,7 @@ import { useMessageStore } from '@/stores/message'
 import { Organizer } from '@/types'
 import OrganizerService from '@/services/OrganizerService'
 import BaseSelect from '@/components/BaseSelect.vue'
-// Event object with all fields from both scripts
+// end
 const event = ref<any>({
   category: '',
   title: '',
