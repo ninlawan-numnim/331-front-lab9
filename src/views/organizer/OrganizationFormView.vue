@@ -6,8 +6,8 @@ import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
 
 const organization = ref<any>({
-    organizationName: '',
-    address: ''
+    name: '',
+   
 })
 
 const router = useRouter()
@@ -16,7 +16,7 @@ function saveOrganization() {
     OrganizerService.createOrganizer(organization.value)
         .then((response) => {
             router.push({ name: 'organizer-detail-view', params: { id: response.data.id }})
-            store.updateMessage('You have successfully added a new organization: ' + response.data.organizationName)
+            store.updateMessage('You have successfully added a new organization: ' + response.data.name)
                 setTimeout(() => {
                     store.resetMessage()
                 }, 3000)
@@ -34,10 +34,7 @@ function saveOrganization() {
             <h3>Organization Details</h3>
             <label>Organization Name</label>
             <input v-model="organization.organizationName" type="text" placeholder="Organization Name" class="field" required />
-            
-            <label>Address</label>
-            <input v-model="organization.address" type="text" placeholder="Full Address" class="field" required />
-            
+      
             <button class="button -fill-gradient" type="submit">Create Organization</button>
         </form>
 

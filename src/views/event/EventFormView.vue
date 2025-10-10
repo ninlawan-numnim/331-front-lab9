@@ -9,7 +9,6 @@ import OrganizerService from '@/services/OrganizerService'
 
 // Event object with all fields from both scripts
 const event = ref<any>({
-  id: 0,
   category: '',
   title: '',
   description: '',
@@ -17,13 +16,19 @@ const event = ref<any>({
   date: '',
   time: '',
   petAllowed: false,
-  organizer: { id: 0, name: '' }
+  organizer: { 
+    id: null  
+  }
 })
 
 const router = useRouter()
 const store = useMessageStore()
 
 const saveEvent = async () => {
+   if (!event.value.organizer.id) {
+    alert('Please select an organizer')
+    return
+  }
   try {
     const response = await EventService.saveEvent(event.value)
     router.push({ name: 'event-detail-view', params: { id: response.data.id } })
@@ -38,11 +43,11 @@ const saveEvent = async () => {
 const organizers = ref<Organizer[]>([])
 onMounted(() => {
   OrganizerService.getOrganizers()
-    .then((response) => {
+    .then((response: { data: Organizer[] | { id: number; name: string }[] }) => {
       organizers.value = response.data
     })
-    .catch(() => {
-      router.push({ name: 'network-error-view' })
+    .catch((error: any) => {
+      console.error('Error fetching organizers:', error)
     })
 })
 </script>
@@ -66,39 +71,25 @@ onMounted(() => {
 
       <!-- Location -->
       <BaseInput v-model="event.location" type="text" label="Location" />
-
-      <!-- Optional: Date and Time
-      <BaseInput v-model="event.date" type="date" label="Date" />
-      <BaseInput v-model="event.time" type="time" label="Time" />
- -->
-      <!-- Optional: Pet Allowed 
-      <label class="inline-flex items-center mt-2">
-        <input type="checkbox" v-model="event.petAllowed" class="mr-2" />
-        Pets Allowed
-      </label>-->
-
-       <h3 class="mt-4 mb-2 text-lg font-medium">Who is your organizer?</h3>
-      <label class="block mb-1 text-sm font-medium text-gray-700">Select an Organizer</label>
-      <select
-        v-model="event.organizer.id"
-        class="mb-6 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option
-          v-for="option in organizers"
-          :value="option.id"
-          :key="option.id"
-          :selected="option.id === event.organizer.id"
-        >
-          {{ option.name }}
-        </option>
-      </select>
-
-      <!-- Submit Button -->
+<select
+  v-model="event.organizer.id"
+  class="mb-6 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+  required
+>
+  <option :value="null" disabled>-- Select an Organizer --</option>  <!-- ADD THIS -->
+  <option
+    v-for="option in organizers"
+    :value="option.id"
+    :key="option.id"
+  >
+    {{ option.name }}
+  </option>
+</select>
       <button
         type="submit"
         class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
       >
-        Submit
+        Save Event
       </button>
     </form>
 

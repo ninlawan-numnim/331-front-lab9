@@ -9,8 +9,7 @@ const props = defineProps<{
 <template>
   <RouterLink class="organizer-link" :to="{ name: 'organizer-detail-view', params: { id: props.organizer.id } }">
     <div class="cursor-pointer border border-gray-600 p-[20px] w-[250px] mb-[18px] hover:scale-101 hover:shadow-sp">
-      <h2>{{ props.organizer.organizationName }}</h2>
-      <span>{{ props.organizer.address }}</span>
+      <h2>{{ props.organizer.name }}</h2>
     </div>
   </RouterLink>
 </template>
