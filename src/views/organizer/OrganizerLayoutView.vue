@@ -5,9 +5,10 @@ import { storeToRefs } from 'pinia'
 const store = useOrganizerStore()
 const { organizer } = storeToRefs(store)
 </script>
+
 <template>
   <div v-if="organizer">
-    <h1>{{ organizer.organizationName }}</h1>
+    <h1>{{ organizer.name }}</h1>
     <nav>
       <RouterLink :to="{ name: 'organizer-detail-view' }">Details</RouterLink>
     </nav>

@@ -2,12 +2,12 @@
 import { onMounted, ref } from 'vue'
 import EventService from '@/services/EventService'
 import BaseInput from '@/components/BaseInput.vue'
+import BaseSelect from '@/components/BaseSelect.vue'  // เพิ่มบรรทัดนี้
 import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
 import { Organizer } from '@/types'
 import OrganizerService from '@/services/OrganizerService'
-import BaseSelect from '@/components/BaseSelect.vue'
-// end
+
 const event = ref<any>({
   category: '',
   title: '',
@@ -17,7 +17,7 @@ const event = ref<any>({
   time: '',
   petAllowed: false,
   organizer: { 
-    id: null  
+    id: null
   }
 })
 
@@ -25,10 +25,11 @@ const router = useRouter()
 const store = useMessageStore()
 
 const saveEvent = async () => {
-   if (!event.value.organizer.id) {
+  if (!event.value.organizer.id) {
     alert('Please select an organizer')
     return
   }
+  
   try {
     const response = await EventService.saveEvent(event.value)
     router.push({ name: 'event-detail-view', params: { id: response.data.id } })
@@ -43,14 +44,15 @@ const saveEvent = async () => {
 const organizers = ref<Organizer[]>([])
 onMounted(() => {
   OrganizerService.getOrganizers()
-    .then((response: { data: Organizer[] | { id: number; name: string }[] }) => {
+    .then((response) => {
       organizers.value = response.data
     })
-    .catch((error: any) => {
-      console.error('Error fetching organizers:', error)
+    .catch(() => {
+      router.push({ name: 'network-error-view' })
     })
 })
 </script>
+
 <template>
   <div class="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md">
     <h1 class="text-2xl font-semibold mb-4">Create an Event</h1>
@@ -74,15 +76,21 @@ onMounted(() => {
 
       <h3 class="mt-4 mb-2 text-lg font-medium">Who is your organizer?</h3>
       
-      <!-- Organizer Select -->
+      <!-- ใช้ BaseSelect component แทน select ธรรมดา -->
       <BaseSelect 
         v-model="event.organizer.id" 
-        :options="organizers" 
-        label="Organizer" 
+        label="Select an Organizer"
+        :options="organizers"
+        required
       />
 
       <!-- Submit Button -->
-      <button class="button" type="submit">Submit</button>
+      <button
+        type="submit"
+        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+      >
+        Submit
+      </button>
     </form>
 
     <pre class="mt-4">{{ event }}</pre>

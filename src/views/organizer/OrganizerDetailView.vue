@@ -10,8 +10,7 @@ const { organizer } = toRefs(props)
 </script>
 <template>
   <div>
-    <h2>{{ organizer.organizationName }}</h2>
-    <p><strong>Address:</strong> {{ organizer.address }}</p>
+    <h2>{{ organizer.name }}</h2>
     <p><strong>Organization ID:</strong> {{ organizer.id }}</p>
   </div>
 </template>

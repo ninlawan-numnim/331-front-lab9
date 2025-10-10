@@ -1,34 +1,41 @@
 <script setup lang="ts">
 import { type Event } from '@/types'
 
-defineProps<{
+const props = defineProps<{
   event: Event
 }>()
 </script>
 
 <template>
-  <RouterLink 
-    class="event-link" 
-    :to="{ name: 'event-detail-view', params: { id: event.id } }"
-  >
-    <div class="cursor-pointer border border-gray-600 p-[20px] w-[250px] mb-[18px] hover:scale-101 hover:shadow-sp">
-      <h2>{{ event.title }}</h2>
-      <template v-if="event.organizer">
-        <span>by</span>
-        <h5>{{ event.organizer.name }}</h5>
-      </template>
-      <template v-else>
-        <span>by</span>
-        <h5>No Organizer</h5>
-      </template>
-      <span>{{ event.category }} @ {{ event.location }}</span>
-    </div>
-  </RouterLink>
+  <div v-if="event">
+    <RouterLink
+      v-if="event.id"
+      class="event-link block border rounded-lg p-4 shadow hover:shadow-md transition"
+      :to="{ name: 'event-detail-view', params: { id: event.id } }"
+    >
+      <h2 class="text-xl font-bold mb-2">{{ event.title }}</h2>
+      <p class="text-gray-700">{{ event.description }}</p>
+
+      <!-- ✅ ตรวจ organizer ก่อนอ่าน -->
+      <p class="text-sm text-gray-500 mt-2">
+        Organizer:
+        <span v-if="event.organizer && event.organizer.name">
+          {{ event.organizer.name }}
+        </span>
+        <span v-else>
+          Unknown
+        </span>
+      </p>
+    </RouterLink>
+  </div>
+  <div v-else>
+    <p>Loading event...</p>
+  </div>
 </template>
 
 <style scoped>
 .event-link {
   text-decoration: none;
-  color: #2c3e50;
+  color: inherit;
 }
 </style>
