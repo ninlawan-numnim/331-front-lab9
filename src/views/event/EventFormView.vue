@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 import { useMessageStore } from '@/stores/message'
 import { Organizer } from '@/types'
 import OrganizerService from '@/services/OrganizerService'
-
+import BaseSelect from '@/components/BaseSelect.vue'
 // Event object with all fields from both scripts
 const event = ref<any>({
   category: '',
@@ -71,26 +71,18 @@ onMounted(() => {
 
       <!-- Location -->
       <BaseInput v-model="event.location" type="text" label="Location" />
-<select
-  v-model="event.organizer.id"
-  class="mb-6 w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-  required
->
-  <option :value="null" disabled>-- Select an Organizer --</option>  <!-- ADD THIS -->
-  <option
-    v-for="option in organizers"
-    :value="option.id"
-    :key="option.id"
-  >
-    {{ option.name }}
-  </option>
-</select>
-      <button
-        type="submit"
-        class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
-      >
-        Save Event
-      </button>
+
+      <h3 class="mt-4 mb-2 text-lg font-medium">Who is your organizer?</h3>
+      
+      <!-- Organizer Select -->
+      <BaseSelect 
+        v-model="event.organizer.id" 
+        :options="organizers" 
+        label="Organizer" 
+      />
+
+      <!-- Submit Button -->
+      <button class="button" type="submit">Submit</button>
     </form>
 
     <pre class="mt-4">{{ event }}</pre>
