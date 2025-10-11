@@ -16,7 +16,7 @@ const props = defineProps<{
       <h2 class="text-xl font-bold mb-2">{{ event.title }}</h2>
       <p class="text-gray-700">{{ event.description }}</p>
 
-      <!-- ✅ ตรวจ organizer ก่อนอ่าน -->
+     
       <p class="text-sm text-gray-500 mt-2">
         Organizer:
         <span v-if="event.organizer && event.organizer.name">
