@@ -26,3 +26,4 @@ export interface EventState {
 export interface OrganizerState {
   organizer: Organizer | null
 }
+export type EventItem = Event  // alias ของ Event

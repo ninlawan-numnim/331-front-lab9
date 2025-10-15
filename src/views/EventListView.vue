@@ -20,23 +20,28 @@ const props = defineProps({
 })
 
 const page = computed(() => props.page)
+
 const hasNextPage = computed(() => {
-  const totalPages = Math.ceil(totalEvents.value / 3)
+  const totalPages = Math.ceil(totalEvents.value / 1)
   return page.value < totalPages
 })
 
-// Function to fetch events based on keyword or page
-const fetchEvents = () => {
-  const queryFunction = keyword.value.trim() === ''
-    ? EventService.getEvents(3, page.value)
-    : EventService.getEventsByKeyword(keyword.value.trim(), 3, page.value)
+// Function to fetch events
+function fetchEvents() {
+  let queryFunction
+  
+  if (keyword.value === '') {
+    queryFunction = EventService.getEvents(1, page.value)
+  } else {
+    queryFunction = EventService.getEventsByKeyword(keyword.value, 1, page.value)
+  }
   
   queryFunction
     .then((response) => {
       events.value = response.data
-      totalEvents.value = Number(response.headers['x-total-count'])
       console.log('events', events.value)
-      console.log('totalEvents', totalEvents.value)
+      totalEvents.value = Number(response.headers['x-total-count'])
+      console.log('totalEvent', totalEvents.value)
     })
     .catch(() => {
       router.push({ name: 'network-error-view' })
@@ -48,9 +53,13 @@ watch(page, () => {
   fetchEvents()
 }, { immediate: true })
 
-// Watch for keyword changes
+// Watch for keyword changes - reset to page 1 and fetch
 watch(keyword, () => {
-  fetchEvents()
+  if (page.value !== 1) {
+    router.push({ name: 'event-list-view', query: { page: 1 } })
+  } else {
+    fetchEvents()
+  }
 })
 </script>
 
@@ -62,7 +71,7 @@ watch(keyword, () => {
       <BaseInput 
         v-model="keyword"
         type="text"
-        label="Search events..." 
+        label="Search events..."
       />
     </div>
     

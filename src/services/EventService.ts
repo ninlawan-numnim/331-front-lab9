@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import type { Event } from '@/types'
+import type { Event, EventItem } from '@/types'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -27,10 +27,11 @@ export default {
     keyword: string,
     perPage: number,
     page: number
-  ): Promise<AxiosResponse<Event[]>> {
-    return apiClient.get<Event[]>(
-      `/events?q=${keyword}&_limit=${perPage}&_page=${page}`
-    )
+  ): Promise<AxiosResponse<EventItem[]>> {
+    // ใช้ title เป็น parameter สำหรับ search
+    const url = `/events?title=${keyword}&_limit=${perPage}&_page=${page}`
+    console.log('Search URL:', url)
+    return apiClient.get<EventItem[]>(url)
   },
   
   getOrganizer(id: number): Promise<AxiosResponse<any>> {
