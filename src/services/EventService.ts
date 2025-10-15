@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
+import type { Event } from '@/types'
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
@@ -10,13 +11,29 @@ const apiClient = axios.create({
 })
 
 export default {
-  getEvents(perPage: Number, page: Number) {
-    return apiClient.get('/events?_limit=' + perPage + '&_page=' + page)
+  getEvents(perPage: number, page: number): Promise<AxiosResponse<Event[]>> {
+    return apiClient.get<Event[]>(`/events?_limit=${perPage}&_page=${page}`)
   },
-  getEvent(id: number) {
-    return apiClient.get('/events/' + id)
+  
+  getEvent(id: number): Promise<AxiosResponse<Event>> {
+    return apiClient.get<Event>(`/events/${id}`)
   },
-  saveEvent(event: Event) {
-    return apiClient.post('/events', event)
+  
+  saveEvent(event: Event): Promise<AxiosResponse<Event>> {
+    return apiClient.post<Event>('/events', event)
+  },
+  
+  getEventsByKeyword(
+    keyword: string,
+    perPage: number,
+    page: number
+  ): Promise<AxiosResponse<Event[]>> {
+    return apiClient.get<Event[]>(
+      `/events?q=${keyword}&_limit=${perPage}&_page=${page}`
+    )
+  },
+  
+  getOrganizer(id: number): Promise<AxiosResponse<any>> {
+    return apiClient.get(`/organizers/${id}`)
   }
 }
