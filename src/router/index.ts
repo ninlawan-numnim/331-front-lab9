@@ -17,11 +17,11 @@ import { useEventStore } from '@/stores/event'
 import { useOrganizerStore } from '@/stores/organizer'
 import AddEventView from '@/views/event/EventFormView.vue'
 import OrganizationFormView from '@/views/organizer/OrganizationFormView.vue'
-
 import AuctionListView from '@/views/AuctionListView.vue'
 import AuctionDetailView from '@/views/AuctionDetailView.vue'
 import AuctionFormView from '@/views/AuctionFormView.vue'
-
+import AuctionService from '@/services/AuctionService'
+import { useAuctionItemStore } from '@/stores/auction'
 const router = createRouter({
   history: createWebHistory('/'),
   routes: [
