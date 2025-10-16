@@ -18,10 +18,14 @@ import { useOrganizerStore } from '@/stores/organizer'
 import AddEventView from '@/views/event/EventFormView.vue'
 import OrganizationFormView from '@/views/organizer/OrganizationFormView.vue'
 
+import AuctionListView from '@/views/AuctionListView.vue'
+import AuctionDetailView from '@/views/AuctionDetailView.vue'
+import AuctionFormView from '@/views/AuctionFormView.vue'
 
 const router = createRouter({
   history: createWebHistory('/'),
   routes: [
+ 
     {
       path: '/',
       name: 'event-list-view',
@@ -141,6 +145,22 @@ const router = createRouter({
       name: 'add-organization',
       component: OrganizationFormView
     },
+    {
+  path: '/auctions',
+  name: 'auction-list-view',
+  component: AuctionListView
+},
+{
+  path: '/auction/:id',
+  name: 'auction-detail-view',
+  component: AuctionDetailView,
+  props: true
+},
+{
+  path: '/auction/new',
+  name: 'add-auction',
+  component: AuctionFormView
+}
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
